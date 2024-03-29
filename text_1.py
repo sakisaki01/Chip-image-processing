@@ -35,7 +35,7 @@ def replace_color_by_rgb(image, background_color, color_ranges_with_targets):
 
     erosion_iterations = 1
     # 执行腐蚀操作，排除不需要的颜色范围
-    kernel = np.ones((2, 1), np.uint8)
+    kernel = np.ones((1, 2), np.uint8)
     result = cv2.erode(result, kernel, iterations=erosion_iterations)
 
     return result
@@ -86,7 +86,7 @@ def main():
     cv2.waitKey(0)
     cv2.destroyAllWindows()
     output_folder = "output_folder"
-    output_path = os.path.join(output_folder, "output_image14.jpg")
+    output_path = os.path.join(output_folder, "output_image15.jpg")
     cv2.imwrite(output_path, result_uint8)
 
 
