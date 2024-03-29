@@ -86,7 +86,7 @@ def main():
     cv2.waitKey(0)
     cv2.destroyAllWindows()
     output_folder = "output_folder"
-    output_path = os.path.join(output_folder, "output_image13.jpg")
+    output_path = os.path.join(output_folder, "output_image14.jpg")
     cv2.imwrite(output_path, result_uint8)
 
 
