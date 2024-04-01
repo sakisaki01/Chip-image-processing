@@ -41,9 +41,9 @@ def replace_color_by_rgb(image, background_color, color_ranges_with_targets):
     return result
 
 
-def main():
+def main(input_path,output_name):
     # 读取图像
-    image = cv2.imread("S2_3_enhanced_contrast/photo_20240308_144157.jpg")
+    image = cv2.imread(input_path)
 
     # 定义初始颜色范围和目标颜色
     color_ranges = []
@@ -86,9 +86,9 @@ def main():
     cv2.waitKey(0)
     cv2.destroyAllWindows()
     output_folder = "output_folder"
-    output_path = os.path.join(output_folder, "output_image15.jpg")
+    output_path = os.path.join(output_folder, output_name)
     cv2.imwrite(output_path, result_uint8)
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
