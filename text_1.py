@@ -25,7 +25,7 @@ def replace_color_by_rgb(image, background_color, color_ranges_with_targets):
         # 将目标颜色应用于指定范围内的像素
         result = np.where(mask[:, :, np.newaxis] == 255, target_color, result)
 
-       # 更新非选定区域的掩码
+        # 更新非选定区域的掩码
         non_selected_mask = cv2.bitwise_and(non_selected_mask, cv2.bitwise_not(mask))
 
     # 将非选定区域替换为背景颜色
