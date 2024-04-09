@@ -35,8 +35,9 @@ def replace_color_by_rgb(image, background_color, color_ranges_with_targets):
     background_image[:, :] = background_color
     result = np.where(non_selected_mask[:, :, np.newaxis] == 1, background_image, result)
 
+    # 腐蚀效果
     erosion_iterations = 1
-    kernel = np.ones((1, 2), np.uint8)
+    kernel = np.ones((2, 2), np.uint8)
     result = cv2.erode(result, kernel, iterations=erosion_iterations)
 
     return result
@@ -58,24 +59,24 @@ def replace_color(input_path, output_folder, output_name=None):
 
     background_color = np.array([0, 0, 0])
 
-    for i in range(4):
-        lower_color = np.array([10 + i * 2, 10 + i * 2, 10 + i * 2])
-        upper_color = np.array([19 + i * 2, 19 + i * 2, 19 + i * 2])
+    for i in range(3):  # 红色
+        lower_color = np.array([8 + i * 1, 8 + i * 1, 8 + i * 1])
+        upper_color = np.array([9 + i * 1, 9 + i * 1, 9 + i * 1])
         target_color = np.array([0, 200 - i * 50, 255])
         color_ranges.append((lower_color, upper_color))
         target_colors.append(target_color)
 
-    for i in range(4):
-        lower_color = np.array([20 + i * 1, 20 + i * 1, 20 + i * 1])
-        upper_color = np.array([25 + i * 1, 25 + i * 1, 259 + i * 1])
+    for i in range(3):  # 绿色
+        lower_color = np.array([12 + i * 1, 12 + i * 1, 12 + i * 1])
+        upper_color = np.array([13 + i * 1, 13 + i * 1, 13 + i * 1])
         target_color = np.array([0, 255, i * 50])
         color_ranges.append((lower_color, upper_color))
         target_colors.append(target_color)
 
-    for i in range(5):
-        lower_color = np.array([26 + i * 1, 26 + i * 1, 26 + i * 1])
+    for i in range(5):  # 蓝色
+        lower_color = np.array([16 + i * 2, 16 + i * 2, 16 + i * 2])
         upper_color = np.array([30 + i * 2, 30 + i * 2, 30 + i * 2])
-        target_color = np.array([255 - i * 20, 0, 0])
+        target_color = np.array([255, 255-50*i, 0])
         color_ranges.append((lower_color, upper_color))
         target_colors.append(target_color)
 
@@ -104,6 +105,6 @@ def process_images_in_folder(input_folder, output_folder):
 
 
 # 调用函数处理文件夹中的所有图片
-input_folder = "D:\GPT\pycharm\pythonProject\ima_processing\\2024_4_3\input_10_huidu"  # 输入文件夹路径
-output_folder = "D:\GPT\pycharm\pythonProject\ima_processing\\2024_4_3\output_10_"  # 输出文件夹路径
+input_folder = "dataset/2024_4_8_17-9-8/input_10_huidu"  # 输入文件夹路径
+output_folder = "dataset/2024_4_8_17-9-8/output7"  # 输出文件夹路径
 process_images_in_folder(input_folder, output_folder)
