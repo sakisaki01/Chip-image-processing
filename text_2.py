@@ -105,6 +105,6 @@ def process_images_in_folder(input_folder, output_folder):
 
 
 # 调用函数处理文件夹中的所有图片
-input_folder = "dataset/2024_4_8_17-9-8/input_10_huidu"  # 输入文件夹路径
-output_folder = "dataset/2024_4_8_17-9-8/output7"  # 输出文件夹路径
+input_folder = "2024-07-02/output"  # 输入文件夹路径
+output_folder = "2024-07-02/output1"  # 输出文件夹路径
 process_images_in_folder(input_folder, output_folder)
