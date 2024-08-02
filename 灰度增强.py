@@ -3,12 +3,12 @@ import cv2
 
 
 # 目标文件夹
-input_folder = "240723-0724/input-5"
+input_folder = "2024-8-2/input"
 # 输出文件夹 如果没有将自动创建
-output_folder = "240723-0724/input-5_huidu"
+output_folder = "2024-8-2/input_huidu3"
 
 
-def enhance_contrast(image, alpha=0):  # 通常alpha=0.1
+def enhance_contrast(image, alpha=0.3):  # 通常alpha=0.1 可以通过修改alpha的值来改变图像对比度 越小对比越明显
     """
     增强图像对比度
     """

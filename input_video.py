@@ -1,8 +1,8 @@
 import cv2
 import os
 
-input_folder = '240723-0724/input-5_cut'
-output_video_path = '240723-0724/input-5_cut.mp4'   #后面的 .mp4 不能删去
+input_folder = '2024-8-2/input_huidu3'
+output_video_path = '2024-8-2/input_huidu3.mp4'   #后面的 .mp4 不能删去
 fps = 30  # 视频帧率
 
 
