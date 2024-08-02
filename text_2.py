@@ -3,25 +3,25 @@ import cv2
 import numpy as np
 
 # 定义红色范围
-red_lower_color = 8
-red_upper_color = 9
+red_lower_color = 2
+red_upper_color = 6
 red_gap = 1
 red_range = 5
 
 # 定义绿色范围
-grn_lower_color = 12
-grn_upper_color = 13
+grn_lower_color = 11
+grn_upper_color = 14
 grn_gap = 3
 grn_range = 5
 
 # 定义蓝色范围
-blu_lower_color = 16
+blu_lower_color = 15
 blu_upper_color = 30
 blu_gap = 10
 blu_range = 5
 
-input_folder = "240723-0724/input-5_huidu"  # 输入文件夹路径
-output_folder = "240723-0724/input-5_huidu+color"  # 输出文件夹路径
+input_folder = "2024-8-2/input_huidu3"  # 输入文件夹路径
+output_folder = "2024-8-2/input_huidu3+color2"  # 输出文件夹路径
 
 # 去除噪点的像素大小（3x3）
 kernel_size = 3
