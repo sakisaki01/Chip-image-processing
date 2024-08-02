@@ -2,7 +2,13 @@ import os
 import cv2
 
 
-def enhance_contrast(image, alpha=0.1):
+# 目标文件夹
+input_folder = "240723-0724/input-5"
+# 输出文件夹 如果没有将自动创建
+output_folder = "240723-0724/input-5_huidu"
+
+
+def enhance_contrast(image, alpha=0):  # 通常alpha=0.1
     """
     增强图像对比度
     """
@@ -66,23 +72,18 @@ def process_images_in_folder(input_folder, output_folder):
             print("已处理:", input_image_path, "并保存为:", output_image_path)
 
 
-def main():
+def main(input_folder, output_folder):
     # 输入文件夹路径（相对路径下的 "dataset" 文件夹）
-    input_folder = "D:\\GPT\\pycharm\\pythonProject\\ima_processing\\2024-07-02\\input"
+    Input_folder = input_folder
 
     # 输出文件夹路径（如果不存在，则创建）
-    output_folder = "D:\\GPT\\pycharm\\pythonProject\\ima_processing\\2024-07-02\\output"
+    Output_folder = output_folder
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
     # # 处理图像文件夹中的所有图像
-    process_images_in_folder(input_folder, output_folder)
-
-    # input_path = "WIN_20240401_15_39_33_Pro.jpg"
-    # output_folder = "D:\GPT\pycharm\pythonProject\ima_processing"
-    # output_path = os.path.join(output_folder, "new.jpg")
-    # process_images_path(input_path,output_path)
+    process_images_in_folder(Input_folder, Output_folder)
 
 
 if __name__ == "__main__":
-    main()
+    main(input_folder, output_folder)
