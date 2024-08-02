@@ -2,6 +2,50 @@ import os
 import cv2
 import numpy as np
 
+# 定义红色范围
+red_lower_color = 8
+red_upper_color = 9
+red_gap = 1
+red_range = 5
+
+# 定义绿色范围
+grn_lower_color = 12
+grn_upper_color = 13
+grn_gap = 3
+grn_range = 5
+
+# 定义蓝色范围
+blu_lower_color = 16
+blu_upper_color = 30
+blu_gap = 10
+blu_range = 5
+
+input_folder = "240723-0724/input-5_huidu"  # 输入文件夹路径
+output_folder = "240723-0724/input-5_huidu+color"  # 输出文件夹路径
+
+# 去除噪点的像素大小（3x3）
+kernel_size = 3
+
+'''
+# 定义红色范围
+red_lower_color = 8
+red_upper_color = 9
+red_gap = 1
+red_range = 5
+
+# 定义绿色范围
+grn_lower_color = 12
+grn_upper_color = 13
+grn_gap = 3
+grn_range = 5
+
+# 定义蓝色范围
+blu_lower_color = 16
+blu_upper_color = 20
+blu_gap = 4
+blu_range = 5
+'''
+
 
 def replace_color_by_rgb(image, background_color, color_ranges_with_targets):
     """
@@ -43,6 +87,14 @@ def replace_color_by_rgb(image, background_color, color_ranges_with_targets):
     return result
 
 
+def remove_flickering_noise(images, kernel_size=3):
+    """
+    使用中值滤波去除局部大小为3x3的噪点
+    """
+    clean_image = cv2.medianBlur(images, kernel_size)
+    return clean_image
+
+
 def replace_color(input_path, output_folder, output_name=None):
     """
     读取图像，根据预定义的颜色范围进行颜色替换，保存处理后的图像.
@@ -59,29 +111,37 @@ def replace_color(input_path, output_folder, output_name=None):
 
     background_color = np.array([0, 0, 0])
 
-    for i in range(3):  # 红色
-        lower_color = np.array([8 + i * 1, 8 + i * 1, 8 + i * 1])
-        upper_color = np.array([9 + i * 1, 9 + i * 1, 9 + i * 1])
+    for i in range(red_range):  # 红色
+        lower_color = np.array(
+            [red_lower_color + i * red_gap, red_lower_color + i * red_gap, red_lower_color + i * red_gap])
+        upper_color = np.array(
+            [red_upper_color + i * red_gap, red_upper_color + i * red_gap, red_upper_color + i * red_gap])
         target_color = np.array([0, 200 - i * 50, 255])
         color_ranges.append((lower_color, upper_color))
         target_colors.append(target_color)
 
-    for i in range(3):  # 绿色
-        lower_color = np.array([12 + i * 1, 12 + i * 1, 12 + i * 1])
-        upper_color = np.array([13 + i * 1, 13 + i * 1, 13 + i * 1])
+    for i in range(grn_range):  # 绿色
+        lower_color = np.array(
+            [grn_lower_color + i * grn_gap, grn_lower_color + i * grn_gap, grn_lower_color + i * grn_gap])
+        upper_color = np.array(
+            [grn_upper_color + i * grn_gap, grn_upper_color + i * grn_gap, grn_upper_color + i * grn_gap])
         target_color = np.array([0, 255, i * 50])
         color_ranges.append((lower_color, upper_color))
         target_colors.append(target_color)
 
-    for i in range(5):  # 蓝色
-        lower_color = np.array([16 + i * 2, 16 + i * 2, 16 + i * 2])
-        upper_color = np.array([30 + i * 2, 30 + i * 2, 30 + i * 2])
-        target_color = np.array([255, 255-50*i, 0])
+    for i in range(blu_range):  # 蓝色
+        lower_color = np.array(
+            [blu_lower_color + i * blu_gap, blu_lower_color + i * blu_gap, blu_lower_color + i * blu_gap])
+        upper_color = np.array(
+            [blu_upper_color + i * blu_gap, blu_upper_color + i * blu_gap, blu_upper_color + i * blu_gap])
+        target_color = np.array([255, 255 - 50 * i, 0])
         color_ranges.append((lower_color, upper_color))
         target_colors.append(target_color)
 
     result = replace_color_by_rgb(image, background_color, list(zip(color_ranges, target_colors)))
     result_uint8 = np.uint8(result)
+    # 去除噪点
+    result_uint8 = remove_flickering_noise(result_uint8, kernel_size=kernel_size)
 
     if output_name is None:
         output_name = os.path.basename(input_path)
@@ -105,6 +165,4 @@ def process_images_in_folder(input_folder, output_folder):
 
 
 # 调用函数处理文件夹中的所有图片
-input_folder = "2024-07-02/output"  # 输入文件夹路径
-output_folder = "2024-07-02/output1"  # 输出文件夹路径
 process_images_in_folder(input_folder, output_folder)
