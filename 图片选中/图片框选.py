@@ -1,7 +1,8 @@
 import tkinter as tk
 from tkinter import filedialog
 from PIL import Image, ImageTk
-import 图片截取
+
+
 
 class ImageApp:
     def __init__(self, root):
