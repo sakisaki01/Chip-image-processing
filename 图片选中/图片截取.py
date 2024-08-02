@@ -2,13 +2,12 @@ from PIL import Image
 import os
 
 
-
 # 原始图片文件夹路径
-input_folder = '../240723-0724/input-5_huidu+color'
+input_folder = '../2024-8-2/input-5'
 # 裁剪后图片保存文件夹路径
-output_folder = '../240723-0724/input-5_huidu+color_cut'
+output_folder = '../2024-8-2/input-5_cut'
 
-
+ # 816.0, 344.0, 1028.0, 814.0
 def crop_images(input_folder, output_folder, left, top, right, bottom):
     # 确保输出文件夹存在，如果不存在则创建
     if not os.path.exists(output_folder):

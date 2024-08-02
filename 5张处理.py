@@ -3,8 +3,8 @@ import os
 import shutil
 
 # 设置输入文件夹和输出文件夹路径
-input_folder = "240723-0724/input"
-output_folder = "240723-0724/input-5"
+input_folder = "2024-8-2/input"
+output_folder = "2024-8-2/input-5"
 # 设置每隔几张处理一次
 Interval = 5
 
