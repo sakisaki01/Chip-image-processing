@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 
 # 定义颜色范围
-blu_lower_color = 120
+blu_lower_color = 121
 blu_upper_color = 150
 blu_gap = 10
 blu_range = 5
