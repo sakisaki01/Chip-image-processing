@@ -36,7 +36,7 @@ class Stable:
     # 配置
     __config = {
         # 要保留的最佳特征的数量
-        'key_point_count': 5000,
+        'key_point_count': 20000,
         # Flann特征匹配
         'index_params': dict(algorithm=0, trees=5),
         'search_params': dict(checks=50),
@@ -83,14 +83,14 @@ class Stable:
 
         self.__capture['fps'] = self.__capture['cap'].get(cv2.CAP_PROP_FPS)
 
-        self.__capture['video'] = cv2.VideoWriter(self.__video_path.replace('.', '_stable.'),
-                                                  cv2.VideoWriter_fourcc(*"mp4v"),
-                                                  self.__capture['fps'],
-                                                  self.__capture['size'])
-
         self.__capture['frame_count'] = int(self.__capture['cap'].get(cv2.CAP_PROP_FRAME_COUNT))
 
         self.__handle_count = min(self.__config['frame_count'], self.__capture['frame_count'])
+
+        # 创建保存图片的文件夹
+        self.output_folder = os.path.join(os.getcwd(), "20240812/output_frames")
+        if not os.path.exists(self.output_folder):
+            os.makedirs(self.output_folder)
 
     # 初始化surf
     def __init_surf(self):
@@ -115,7 +115,7 @@ class Stable:
 
         # 选择良好的匹配
         self.__surf['template_kp'] = []
-        for f in matches[:50]:  # 你可以调整这里的数量来选取最佳匹配
+        for f in matches[:100]:  # 你可以调整这里的数量来选取最佳匹配
             self.__surf['template_kp'].append(self.__surf['kp'][f.queryIdx])
 
         self.__capture['cap'].set(cv2.CAP_PROP_POS_FRAMES, 0)
@@ -132,13 +132,12 @@ class Stable:
         self.__init_surf()
         self.__init_data()
 
-    # 处理
-    def __process(self):
+        # 处理
 
+    def __process(self):
         self.__current_frame = 1
 
         while True:
-
             if self.__current_frame > self.__handle_count:
                 break
 
@@ -148,15 +147,15 @@ class Stable:
             success, frame = self.__capture['cap'].read()
             self.__handle_timer['read'] = int((time.time() - start_time) * 1000)
 
-            if not success: return
+            if not success:
+                return
 
             # 计算
             frame = self.detect_compute(frame)
 
-            # 写帧
-            st = time.time()
-            self.__capture['video'].write(frame)
-            self.__handle_timer['write'] = int((time.time() - st) * 1000)
+            # 保存处理后的帧为图像文件
+            output_filename = os.path.join(self.output_folder, f"output_frame_{self.__current_frame:04d}.png")
+            cv2.imwrite(output_filename, frame)
 
             self.__handle_timer['handle'] = int((time.time() - start_time) * 1000)
 
@@ -185,36 +184,48 @@ class Stable:
                    self.__handle_timer['write']))
 
     # 特征点提取
+    # 在 detect_compute 方法中，计算多个帧的变换矩阵的平均值
     def detect_compute(self, frame):
         frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         # 计算特征点
-        st = time.time()
         kp, des = self.__surf['surf'].detectAndCompute(frame_gray, None)
-        self.__handle_timer['key'] = int((time.time() - st) * 1000)
 
         # 特征点匹配
-        st = time.time()
         matches = self.bf.match(self.__surf['des'], des)
         matches = sorted(matches, key=lambda x: x.distance)
-        self.__handle_timer['flann'] = int((time.time() - st) * 1000)
 
         # 计算单应性矩阵
-        st = time.time()
         p1, p2 = [], []
-        for f in matches[:50]:  # 选择前50个匹配点
+        for f in matches[:100]:  # 选择前50个匹配点
             p1.append(self.__surf['kp'][f.queryIdx].pt)
             p2.append(kp[f.trainIdx].pt)
 
         H, _ = cv2.findHomography(np.float32(p2), np.float32(p1), cv2.RHO)
-        self.__handle_timer['matrix'] = int((time.time() - st) * 1000)
+
+        # 平滑矩阵 (可以尝试不同的平滑算法)
+        if self.__current_frame > 1:
+            H = self.__smooth_matrix(H)
 
         # 透视变换
-        st = time.time()
         output_frame = cv2.warpPerspective(frame, H, self.__capture['size'], borderMode=cv2.BORDER_REPLICATE)
-        self.__handle_timer['perspective'] = int((time.time() - st) * 1000)
 
         return output_frame
+
+    def __smooth_matrix(self, H):
+        # 使用平滑算法（例如简单的移动平均）来平滑矩阵
+        # 这里只是一个示例，具体平滑算法需要根据情况调整
+        if not hasattr(self, 'H_history'):
+            self.H_history = []
+        self.H_history.append(H)
+
+        if len(self.H_history) > 30:
+            self.H_history.pop(0)
+
+        H_avg = np.mean(self.H_history, axis=0)
+        return H_avg
+
+
 
 
 s = Stable()
