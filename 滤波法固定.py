@@ -3,8 +3,15 @@ import cv2
 import os
 
 # 定义平滑半径
-'''如果图像帧抖动较大，可以增加这个值以获得更平滑的结果；如果图像帧抖动较小，则可以减小这个值以保持更自然的运动'''
-SMOOTHING_RADIUS = 200
+'''如果图像帧抖动较大，可以增加这个值以获得更平滑的结果；如果图像帧抖动较小，则可以减小这个值以保持更自然的运动 
+   设置过高可能会导致图像模糊'''
+SMOOTHING_RADIUS = 300
+
+# 获取图像帧路径列表
+image_folder = '0828/IL6+IL6R 2/input_huidu1'
+# 创建输出目录
+output_folder = '0828/IL6+IL6R 2/input_huidu1-lubo'
+
 
 # 移动平均滤波函数
 def moving_average(curve, radius):
@@ -14,6 +21,7 @@ def moving_average(curve, radius):
     curve_smoothed = np.convolve(curve_pad, f, mode='same')
     return curve_smoothed[radius:-radius]
 
+
 # 平滑轨迹函数
 def smooth_trajectory(trajectory):
     smoothed_trajectory = np.copy(trajectory)
@@ -21,15 +29,23 @@ def smooth_trajectory(trajectory):
         smoothed_trajectory[:, i] = moving_average(trajectory[:, i], radius=SMOOTHING_RADIUS)
     return smoothed_trajectory
 
+
 # 修复边界函数
 def fix_border(frame):
     s = frame.shape
     T = cv2.getRotationMatrix2D((s[1] / 2, s[0] / 2), 0, 1.04)
     return cv2.warpAffine(frame, T, (s[1], s[0]))
 
-# 获取图像帧路径列表
-image_folder = '20240812/0808_huidu3'
-image_paths = sorted([os.path.join(image_folder, f) for f in os.listdir(image_folder) if f.endswith('.jpg')])
+
+# 计算帧之间的变换矩阵的平均值
+def average_transforms(transforms):
+    avg_transforms = np.copy(transforms)
+    for i in range(1, len(transforms)):
+        avg_transforms[i] = (transforms[i] + transforms[i - 1]) / 2
+    return avg_transforms
+
+
+image_paths = sorted([os.path.join(image_folder, f) for f in os.listdir(image_folder) if f.endswith((".jpg", ".png"))])
 
 # 检查是否有图像帧
 if not image_paths:
@@ -81,7 +97,6 @@ difference = smoothed_trajectory - trajectory
 transforms_smooth = transforms + difference
 
 # 创建输出目录
-output_folder = '20240812/0808_huidu3-lubo'
 if not os.path.exists(output_folder):
     os.makedirs(output_folder)
 
@@ -104,4 +119,4 @@ for i in range(n_frames):
     cv2.imwrite(output_filename, frame_stabilized)
     print(f"Saved stabilized frame {i + 1}/{n_frames}")
 
-print("Image sequence stabilization completed.")
+print(f"Image sequence stabilization completed. add：{output_folder}")
