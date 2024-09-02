@@ -3,13 +3,13 @@ import cv2
 import numpy as np
 
 # 定义颜色范围
-blu_lower_color = 121
-blu_upper_color = 150
+blu_lower_color = 30
+blu_upper_color = 50
 blu_gap = 10
 blu_range = 5
 
-input_folder = "2024.0809/input_cut"  # 输入文件夹路径
-output_folder = "2024.0809/input_cut+color22"  # 输出文件夹路径
+input_folder = "0822/no medicine/input_huidu3-4_cut1"  # 输入文件夹路径
+output_folder = "0822/no medicine/input_huidu3-4_cut1+color1"  # 输出文件夹路径
 
 # 去除噪点的像素大小（3x3）
 kernel_size = 3
